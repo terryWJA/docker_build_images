@@ -1,0 +1,43 @@
+# ============================================================
+# Galileo ICF 跨平台基础镜像
+# 支持架构: linux/amd64, linux/arm64
+# 构建命令:
+#   docker buildx build --platform linux/amd64,linux/arm64 \
+#     -t your-registry/icf-base:latest --push -f DockerfileBase .
+# ============================================================
+FROM python:3.11-slim
+
+LABEL maintainer="icf-team@envision-energy.com"
+LABEL version="2026.2"
+LABEL description="Galileo ICF cross-platform base image for CPU algorithms"
+LABEL python_version="3.11"
+
+# 系统依赖
+#   libgomp1                    - OpenMP 运行时，numpy/scipy/sklearn 矩阵运算需要
+#   libglib2.0-0                - opencv-python-headless 运行时依赖
+#   libsm6/libxext6/libxrender1 - X11 库，保留兼容性
+#   libjpeg62-turbo             - Pillow JPEG 解码
+#   libpng16-16                 - Pillow PNG 解码
+#   其余为运维调试工具
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgomp1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libjpeg62-turbo \
+    libpng16-16 \
+    bash \
+    curl \
+    ca-certificates \
+    telnet \
+    netcat-openbsd \
+    iputils-ping \
+    gosu \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+# pip 配置（内部镜像源）
+RUN pip3 install --upgrade pip && \
+    pip3 config set global.index-url http://repo.pe2.cc/repository/pypi/simple && \
+    pip3 config set global.trusted-host repo.pe2.cc
