@@ -15,6 +15,8 @@ on:
         description: 'Release 标签名 (如: base-py311-2026.Q2)'
         required: true
         default: 'base-py311-2026.Q2'
+permissions:
+  contents: write
 
 jobs:
   build_and_release:
