@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gosu \
     vim \
     locales \
+    make \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen zh_CN.UTF-8 \
